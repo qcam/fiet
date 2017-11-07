@@ -1,0 +1,5 @@
+%{
+  "erlsom": {:hex, :erlsom, "1.2.1", "9d81da55b345865fb0e05a06f2727c49930fb6a0cd872c59ce7aa1554eea04e0", [:rebar], []},
+  "fml": {:hex, :fml, "0.1.0", "ab8def9a3f6b2a2ea3657e134ee36ce53880d9639b79c27c1d2292c074c7e646", [:mix], [{:erlsom, "~> 1.2.1", [hex: :erlsom, optional: false]}]},
+  "saxy": {:hex, :saxy, "0.2.0-rc1", "22cce968d0dbbd523b1508ba103ecc3614e25d9c26cd6c825400f9c4b889cf61", [:mix], []},
+}
