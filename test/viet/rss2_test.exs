@@ -3,10 +3,11 @@ defmodule Viet.RSS2.StandardParser do
 end
 
 defmodule Viet.RSS2.OutstandingParser do
-  use Viet.RSS2, extras: [
-    item: [{"dc:creator", "dc:creator"}],
-    channel: [{"outstanding:tag", "o:t"}]
-  ]
+  use Viet.RSS2,
+    extras: [
+      item: [{"dc:creator", "dc:creator"}],
+      channel: [{"outstanding:tag", "o:t"}]
+    ]
 end
 
 defmodule Viet.RSS2Test do
@@ -60,6 +61,7 @@ defmodule Viet.RSS2Test do
        </channel>
     </rss>
     """
+
     {:ok, feed} = Viet.RSS2.StandardParser.parse(rss)
     channel = feed.channel
     assert channel.title == "Liftoff News"

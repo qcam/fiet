@@ -6,7 +6,6 @@ defmodule Viet.StackParser do
 
     case Saxy.parse_string(document, Viet.StackParser, init_state) do
       {:ok, {_stack, state, _handler}} -> {:ok, state}
-
       {:error, reason} -> {:error, reason}
     end
   end
