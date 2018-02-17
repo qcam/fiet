@@ -1,19 +1,41 @@
 defmodule Fiet.Mixfile do
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
       app: :fiet,
-      version: "0.1.0",
-      elixir: "~> 1.5",
-      start_permanent: Mix.env() == :prod,
-      deps: deps()
+      version: @version,
+      elixir: "~> 1.4",
+      package: package(),
+      description: description(),
+      name: "Fiet",
+      deps: deps(),
+      docs: [
+        main: "Saxy",
+        source_ref: "v#{@version}",
+        source_url: "https://github.com/lexmag/msgpax"
+      ]
     ]
   end
 
   def application, do: []
 
-  defp deps do
+  defp description() do
+    "Fiet is a feeds parser in Elixir, which aims to provide extensibility, speed," <>
+      " and standard compliance to feed parsing."
+  end
+
+  defp package() do
+    [
+      maintainers: ["Cẩm Huỳnh"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/qcam/fiet"}
+    ]
+  end
+
+  defp deps() do
     [
       {:saxy, "0.2.0-rc1"},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false}
