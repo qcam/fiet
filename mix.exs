@@ -1,7 +1,7 @@
 defmodule Fiet.Mixfile do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.1.0-rc1"
 
   def project do
     [
@@ -13,9 +13,9 @@ defmodule Fiet.Mixfile do
       name: "Fiet",
       deps: deps(),
       docs: [
-        main: "Saxy",
+        main: "Fiet",
         source_ref: "v#{@version}",
-        source_url: "https://github.com/lexmag/msgpax"
+        source_url: "https://github.com/qcam/fiet"
       ]
     ]
   end
