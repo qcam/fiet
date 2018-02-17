@@ -1,9 +1,9 @@
-defmodule Viet.Mixfile do
+defmodule Fiet.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :viet,
+      app: :fiet,
       version: "0.1.0",
       elixir: "~> 1.5",
       start_permanent: Mix.env() == :prod,
@@ -14,6 +14,9 @@ defmodule Viet.Mixfile do
   def application, do: []
 
   defp deps do
-    [{:saxy, "0.2.0-rc1"}]
+    [
+      {:saxy, "0.2.0-rc1"},
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
+    ]
   end
 end

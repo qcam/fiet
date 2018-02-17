@@ -1,10 +1,12 @@
-defmodule Viet.StackParser do
+defmodule Fiet.StackParser do
+  @moduledoc false
+
   @behaviour Saxy.Handler
 
   def parse(document, state, handler) do
     init_state = {[], state, handler}
 
-    case Saxy.parse_string(document, Viet.StackParser, init_state) do
+    case Saxy.parse_string(document, Fiet.StackParser, init_state) do
       {:ok, {_stack, state, _handler}} -> {:ok, state}
       {:error, reason} -> {:error, reason}
     end

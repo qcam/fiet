@@ -1,8 +1,35 @@
-defmodule Viet.RSS2 do
+defmodule Fiet.RSS2 do
+  @moduledoc """
+  A module to be used to implement RSS 2.0 parser.
+
+  ## Examples
+
+  A RSS 2.0 compliant parser can be implemented with:
+
+      defmodule StandardParser do
+        use Fiet.RSS2
+      end
+
+  Parsers can also be customized by using `:extras` option, with `:channel` being
+  all the outstanding tags in `<channel>` and `:item` being all the outstanding tags in
+  `<item>` in the feed.
+
+      defmodule NotSoStardardParser do
+        use Fiet.RSS2, [extras: [
+          channel: [{"atom:link", "atom:link"}],
+          item: [{"content:encoded", "encoded_content"}]
+        ]]
+      end
+  """
+
+  @type t :: %__MODULE__{
+          channel: Fiet.RSS2.Channel.t()
+        }
+
   defstruct [:channel]
 
-  alias Viet.RSS2.{Channel, Item}
-  alias Viet.RSS2
+  alias Fiet.RSS2.{Channel, Item}
+  alias Fiet.RSS2
 
   @doc false
   defmacro __using__(opts) do
@@ -13,7 +40,7 @@ defmodule Viet.RSS2 do
 
       def parse(document) do
         {:ok, %RSS2{channel: channel} = feed} =
-          Viet.StackParser.parse(document, %RSS2{}, __MODULE__)
+          Fiet.StackParser.parse(document, %RSS2{}, __MODULE__)
 
         channel = %{channel | items: Enum.reverse(channel.items)}
 
@@ -124,4 +151,12 @@ defmodule Viet.RSS2 do
       end
     end
   end
+
+  @doc """
+  Parses RSS 2.0 document.
+
+  This function accepts RSS 2.0 document in raw binary and returns `{:ok, Fiet.RSS2.t()}`,
+  `{:error, any}` otherwise.
+  """
+  @callback parse(document :: binary) :: {:ok, Fiet.RSS2.t()} | {:error, any}
 end

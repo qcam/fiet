@@ -1,16 +1,16 @@
-defmodule Viet.RSS2.StandardParser do
-  use Viet.RSS2
+defmodule Fiet.RSS2.StandardParser do
+  use Fiet.RSS2
 end
 
-defmodule Viet.RSS2.OutstandingParser do
-  use Viet.RSS2,
+defmodule Fiet.RSS2.OutstandingParser do
+  use Fiet.RSS2,
     extras: [
       item: [{"dc:creator", "dc:creator"}],
       channel: [{"outstanding:tag", "o:t"}]
     ]
 end
 
-defmodule Viet.RSS2Test do
+defmodule Fiet.RSS2Test do
   use ExUnit.Case, async: true
 
   test "parse/1" do
@@ -62,7 +62,7 @@ defmodule Viet.RSS2Test do
     </rss>
     """
 
-    {:ok, feed} = Viet.RSS2.StandardParser.parse(rss)
+    {:ok, feed} = Fiet.RSS2.StandardParser.parse(rss)
     channel = feed.channel
     assert channel.title == "Liftoff News"
     assert channel.link == "http://liftoff.msfc.nasa.gov/"
@@ -72,7 +72,7 @@ defmodule Viet.RSS2Test do
     assert [item | _] = channel.items
     assert item.title == "Star City"
 
-    {:ok, feed} = Viet.RSS2.OutstandingParser.parse(rss)
+    {:ok, feed} = Fiet.RSS2.OutstandingParser.parse(rss)
     channel = feed.channel
     assert channel.title == "Liftoff News"
     assert channel.link == "http://liftoff.msfc.nasa.gov/"
