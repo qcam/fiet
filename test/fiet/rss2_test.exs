@@ -5,84 +5,101 @@ end
 defmodule Fiet.RSS2.OutstandingParser do
   use Fiet.RSS2,
     extras: [
-      item: [{"dc:creator", "dc:creator"}],
-      channel: [{"outstanding:tag", "o:t"}]
+      channel: [{"atom:link", "atom_link"}],
+      item: [{"dc:creator", "creator"}]
     ]
 end
 
 defmodule Fiet.RSS2Test do
   use ExUnit.Case, async: true
 
+  alias Fiet.RSS2
+
   test "parse/1" do
-    rss = """
-    <?xml version="1.0"?>
-    <rss version="2.0">
-       <channel>
-          <title>Liftoff News</title>
-          <link>http://liftoff.msfc.nasa.gov/</link>
-          <description>Liftoff to Space Exploration.</description>
-          <language>en-us</language>
-          <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
-          <lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>
-          <docs>http://blogs.law.harvard.edu/tech/rss</docs>
-          <generator>Weblog Editor 2.0</generator>
-          <managingEditor>editor@example.com</managingEditor>
-          <webMaster>webmaster@example.com</webMaster>
-          <outstanding:tag>I'm outstanding</outstanding:tag>
-          <item>
-             <title>Star City</title>
-             <link>http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp</link>
-             <description>How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's &lt;a href="http://howe.iki.rssi.ru/GCTC/gctc_e.htm"&gt;Star City&lt;/a&gt;.</description>
-             <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
-             <guid>http://liftoff.msfc.nasa.gov/2003/06/03.html#item573</guid>
-             <dc:creator><![CDATA[Cẩm Huỳnh]]></dc:creator>
-          </item>
-          <item>
-             <title>It looks cool</title>
-             <author>someone</author>
-             <description>Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a &lt;a href="http://science.nasa.gov/headlines/y2003/30may_solareclipse.htm"&gt;partial eclipse of the Sun&lt;/a&gt; on Saturday, May 31st.</description>
-             <pubDate>Fri, 30 May 2003 11:06:42 GMT</pubDate>
-             <guid>http://liftoff.msfc.nasa.gov/2003/05/30.html#item572</guid>
-          </item>
-          <item>
-             <title>The Engine That Does More</title>
-             <link>http://liftoff.msfc.nasa.gov/news/2003/news-VASIMR.asp</link>
-             <description>Before man travels to Mars, NASA hopes to design new engines that will let us fly through the Solar System more quickly.  The proposed VASIMR engine would do that.</description>
-             <pubDate>Tue, 27 May 2003 08:37:32 GMT</pubDate>
-             <guid>http://liftoff.msfc.nasa.gov/2003/05/27.html#item571</guid>
-          </item>
-          <item>
-             <title>Astronauts' Dirty Laundry</title>
-             <link>http://liftoff.msfc.nasa.gov/news/2003/news-laundry.asp</link>
-             <description>Compared to earlier spacecraft, the International Space Station has many luxuries, but laundry facilities are not one of them.  Instead, astronauts have other options.</description>
-             <pubDate>Tue, 20 May 2003 08:56:02 GMT</pubDate>
-             <guid>http://liftoff.msfc.nasa.gov/2003/05/20.html#item570</guid>
-          </item>
-       </channel>
-    </rss>
-    """
+    rss = File.read!("./test/support/fixture/simple.rss.xml")
 
-    {:ok, feed} = Fiet.RSS2.StandardParser.parse(rss)
-    channel = feed.channel
-    assert channel.title == "Liftoff News"
-    assert channel.link == "http://liftoff.msfc.nasa.gov/"
-    assert channel.description == "Liftoff to Space Exploration."
-    assert channel.last_build_date == "Tue, 10 Jun 2003 09:41:01 GMT"
+    {:ok, feed} = RSS2.StandardParser.parse(rss)
 
-    assert [item | _] = channel.items
-    assert item.title == "Star City"
+    %RSS2.Channel{
+      title: title,
+      link: link,
+      description: description,
+      last_build_date: last_build_date,
+      categories: categories,
+      image: image,
+      items: items,
+    } = feed.channel
+
+    assert title == "Liftoff News"
+    assert link == "http://liftoff.msfc.nasa.gov/"
+    assert description == "Liftoff to Space Exploration."
+    assert last_build_date == "Tue, 10 Jun 2003 09:41:01 GMT"
+
+    assert length(categories) == 2
+
+    assert [category | categories] = categories
+    assert category ==
+      %RSS2.Category{domain: "https://example.com/categories/science", value: "Science"}
+
+    assert [category] = categories
+    assert category ==
+      %RSS2.Category{domain: nil, value: "Space"}
+
+    %RSS2.Image{
+      title: channel_image_title,
+      link: channel_image_link,
+      url: channel_image_url,
+      description: channel_image_description,
+      width: channel_image_width,
+      height: channel_image_height
+    } = image
+
+    assert channel_image_title == "Liftoff News Logo"
+    assert channel_image_link == "https://www.liftoff.msfc.nasa.gov/"
+    assert channel_image_url == "https://www.example.com/images/logo.png"
+    assert channel_image_description == "The logo of Liftoff News"
+    assert channel_image_width == "50"
+    assert channel_image_height == "50"
+
+    assert [item | _] = items
+
+    %RSS2.Item{
+      title: item_title,
+      link: item_link,
+      description: item_description,
+      enclosure: item_enclosure
+    } = item
+
+    assert item_title == "Star City"
+    assert item_link == "http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp"
+    assert item_description == "How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's &lt;a href=\"http://howe.iki.rssi.ru/GCTC/gctc_e.htm\"&gt;Star City&lt;/a&gt;."
+    assert item_enclosure == %RSS2.Item.Enclosure{
+      length: "78645",
+      type: "video/wmv",
+      url: "https://www.w3schools.com/media/3d.wmv"
+    }
+  end
+
+  test "parse/1 for outstanding parser" do
+    rss = File.read!("./test/support/fixture/outstanding.rss.xml")
 
     {:ok, feed} = Fiet.RSS2.OutstandingParser.parse(rss)
+
     channel = feed.channel
     assert channel.title == "Liftoff News"
     assert channel.link == "http://liftoff.msfc.nasa.gov/"
     assert channel.description == "Liftoff to Space Exploration."
     assert channel.last_build_date == "Tue, 10 Jun 2003 09:41:01 GMT"
-    assert Map.fetch!(channel.extras, "o:t") == {[], "I'm outstanding"}
+    assert {attrs, content} = Map.fetch!(channel.extras, "atom_link")
+    assert attrs == [
+      {"href", "http://superfeedr.com"},
+      {"rel", "hub"}
+    ]
+    assert content == ""
 
     assert [item | _] = channel.items
     assert item.title == "Star City"
     assert extras = item.extras
-    assert Map.fetch!(extras, "dc:creator") == {[], "Cẩm Huỳnh"}
+    assert Map.fetch!(extras, "creator") == {[], "John Doe"}
   end
 end

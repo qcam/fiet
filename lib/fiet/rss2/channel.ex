@@ -1,4 +1,16 @@
 defmodule Fiet.RSS2.Channel do
+  defmodule Cloud do
+    @type t :: %__MODULE__{
+            domain: binary,
+            port: binary,
+            path: binary,
+            register_procedure: binary,
+            protocol: binary
+          }
+
+    defstruct [:domain, :port, :path, :register_procedure, :protocol]
+  end
+
   @moduledoc """
   A struct that represents `<channel>` in RSS 2.0.
   """
@@ -7,24 +19,21 @@ defmodule Fiet.RSS2.Channel do
           title: binary,
           link: binary,
           description: binary,
-          language: binary,
-          copyright: binary,
-          managing_editor: binary,
-          web_master: binary,
-          pub_date: binary,
-          last_build_date: binary,
-          category: binary,
-          generator: binary,
-          docs: binary,
-          cloud: binary,
-          ttl: binary,
-          image: binary,
-          rating: binary,
-          text_input: binary,
-          skip_hours: binary,
-          skip_days: binary,
-          items: binary,
-          extras: map
+          language: binary | nil,
+          copyright: binary | nil,
+          managing_editor: binary | nil,
+          web_master: binary | nil,
+          pub_date: binary | nil,
+          last_build_date: binary | nil,
+          categories: list(Fiet.RSS2.Category.t()),
+          generator: binary | nil,
+          docs: binary | nil,
+          cloud: Cloud.t() | nil,
+          ttl: binary | nil,
+          image: Fiet.RSS2.Image.t() | nil,
+          rating: binary | nil,
+          items: list(Fiet.RSS2.Item.t()),
+          extras: map()
         }
 
   defstruct [
@@ -37,17 +46,16 @@ defmodule Fiet.RSS2.Channel do
     :web_master,
     :pub_date,
     :last_build_date,
-    :category,
     :generator,
     :docs,
     :cloud,
     :ttl,
     :image,
     :rating,
-    :text_input,
     :skip_hours,
     :skip_days,
-    :items,
-    :extras
+    categories: [],
+    items: [],
+    extras: %{}
   ]
 end
