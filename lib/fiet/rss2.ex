@@ -1,4 +1,8 @@
 defmodule Fiet.RSS2 do
+  defmodule ParsingError do
+    defexception [:message]
+  end
+
   @moduledoc """
   A module to be used to implement RSS 2.0 parser.
 
@@ -38,12 +42,28 @@ defmodule Fiet.RSS2 do
       extra_channel_tags = Keyword.get(extras, :channel, [])
 
       def parse(document) do
-        {:ok, %RSS2{channel: channel} = feed} =
+        try do
           Fiet.StackParser.parse(document, %RSS2{}, __MODULE__)
+        rescue
+          error in [Fiet.RSS2.ParsingError] ->
+            {:error, error.message}
+        else
+          {:ok, %RSS2{channel: channel} = feed} ->
+            channel = %{channel | items: Enum.reverse(channel.items)}
 
-        channel = %{channel | items: Enum.reverse(channel.items)}
+            {:ok, %{feed | channel: channel}}
+        end
+      end
 
-        {:ok, %{feed | channel: channel}}
+      # First element
+      def on_start_element(element, [], feed) do
+        case element do
+          {"rss", attributes, _content} ->
+            feed
+
+          {tag_name, _attributes, _content} ->
+            raise(ParsingError, message: "unexpected root tag #{inspect(tag_name)}")
+        end
       end
 
       def on_start_element({"channel", _, _}, stack, feed) do

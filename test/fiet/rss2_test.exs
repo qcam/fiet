@@ -15,7 +15,7 @@ defmodule Fiet.RSS2Test do
 
   alias Fiet.RSS2
 
-  test "parse/1" do
+  test "parse/1 with standard parser" do
     rss = File.read!("./test/support/fixture/simple.rss.xml")
 
     {:ok, feed} = RSS2.StandardParser.parse(rss)
@@ -80,7 +80,7 @@ defmodule Fiet.RSS2Test do
     }
   end
 
-  test "parse/1 for outstanding parser" do
+  test "parse/1 for customized parser" do
     rss = File.read!("./test/support/fixture/outstanding.rss.xml")
 
     {:ok, feed} = Fiet.RSS2.OutstandingParser.parse(rss)
@@ -101,5 +101,15 @@ defmodule Fiet.RSS2Test do
     assert item.title == "Star City"
     assert extras = item.extras
     assert Map.fetch!(extras, "creator") == {[], "John Doe"}
+  end
+
+  test "parse/1 with non RSS 2.0 feed" do
+    rss = """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <foo></foo>
+    """
+
+    assert {:error, reason} = Fiet.RSS2.StandardParser.parse(rss)
+    assert reason == "unexpected root tag \"foo\""
   end
 end
