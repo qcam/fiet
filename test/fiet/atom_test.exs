@@ -21,7 +21,8 @@ defmodule Fiet.AtomTest do
 
     assert title == "dive into mark"
 
-    assert subtitle == "\n       A &lt;em&gt;lot&lt;/em&gt; of effort\n       went into making this effortless\n     "
+    assert subtitle ==
+             "\n       A &lt;em&gt;lot&lt;/em&gt; of effort\n       went into making this effortless\n     "
 
     assert link == %Fiet.Atom.Link{
              href: "http://example.org/feed.atom",
@@ -45,11 +46,13 @@ defmodule Fiet.AtomTest do
            }
 
     assert updated == "2005-07-31T12:29:29Z"
+
     assert generator == %Fiet.Atom.Generator{
-      text: "\n       Example Toolkit\n     ",
-      uri: "http://www.example.com/",
-      version: "1.0"
-    }
+             text: "\n       Example Toolkit\n     ",
+             uri: "http://www.example.com/",
+             version: "1.0"
+           }
+
     assert rights == "Copyright (c) 2003, Mark Pilgrim"
 
     assert %Fiet.Atom.Entry{
@@ -109,20 +112,24 @@ defmodule Fiet.AtomTest do
     assert length([entry | _] = entries) == 25
 
     assert %Atom.Entry{
-      title: title,
-      link: link,
-      updated: updated
-    } = entry
+             title: title,
+             link: link,
+             updated: updated
+           } = entry
 
-    assert title == {:text, "8000-yr old underwater burial site reveals human skulls mounted on poles"}
+    assert title ==
+             {:text, "8000-yr old underwater burial site reveals human skulls mounted on poles"}
+
     assert link == %Fiet.Atom.Link{
-              href: "https://www.reddit.com/r/worldnews/comments/7yo6hx/8000yr_old_underwater_burial_site_reveals_human/",
-              href_lang: nil,
-              length: nil,
-              rel: nil,
-              title: nil,
-              type: nil
-            }
+             href:
+               "https://www.reddit.com/r/worldnews/comments/7yo6hx/8000yr_old_underwater_burial_site_reveals_human/",
+             href_lang: nil,
+             length: nil,
+             rel: nil,
+             title: nil,
+             type: nil
+           }
+
     assert updated == "2018-02-19T17:10:48+00:00"
   end
 end

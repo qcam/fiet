@@ -27,7 +27,7 @@ defmodule Fiet.RSS2Test do
       last_build_date: last_build_date,
       categories: categories,
       image: image,
-      items: items,
+      items: items
     } = feed.channel
 
     assert title == "Liftoff News"
@@ -38,12 +38,12 @@ defmodule Fiet.RSS2Test do
     assert length(categories) == 2
 
     assert [category | categories] = categories
+
     assert category ==
-      %RSS2.Category{domain: "https://example.com/categories/science", value: "Science"}
+             %RSS2.Category{domain: "https://example.com/categories/science", value: "Science"}
 
     assert [category] = categories
-    assert category ==
-      %RSS2.Category{domain: nil, value: "Space"}
+    assert category == %RSS2.Category{domain: nil, value: "Space"}
 
     %RSS2.Image{
       title: channel_image_title,
@@ -72,12 +72,15 @@ defmodule Fiet.RSS2Test do
 
     assert item_title == "Star City"
     assert item_link == "http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp"
-    assert item_description == "How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's &lt;a href=\"http://howe.iki.rssi.ru/GCTC/gctc_e.htm\"&gt;Star City&lt;/a&gt;."
+
+    assert item_description ==
+             "How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's &lt;a href=\"http://howe.iki.rssi.ru/GCTC/gctc_e.htm\"&gt;Star City&lt;/a&gt;."
+
     assert item_enclosure == %RSS2.Item.Enclosure{
-      length: "78645",
-      type: "video/wmv",
-      url: "https://www.w3schools.com/media/3d.wmv"
-    }
+             length: "78645",
+             type: "video/wmv",
+             url: "https://www.w3schools.com/media/3d.wmv"
+           }
   end
 
   test "parse/1 for customized parser" do
@@ -91,10 +94,12 @@ defmodule Fiet.RSS2Test do
     assert channel.description == "Liftoff to Space Exploration."
     assert channel.last_build_date == "Tue, 10 Jun 2003 09:41:01 GMT"
     assert {attrs, content} = Map.fetch!(channel.extras, "atom_link")
+
     assert attrs == [
-      {"href", "http://superfeedr.com"},
-      {"rel", "hub"}
-    ]
+             {"href", "http://superfeedr.com"},
+             {"rel", "hub"}
+           ]
+
     assert content == ""
 
     assert [item | _] = channel.items

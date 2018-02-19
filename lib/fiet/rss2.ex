@@ -83,7 +83,11 @@ defmodule Fiet.RSS2 do
         feed
       end
 
-      def on_end_element(element, [{"image", _, _} | [{"channel", _, _} | _]], %RSS2{channel: channel} = feed) do
+      def on_end_element(
+            element,
+            [{"image", _, _} | [{"channel", _, _} | _]],
+            %RSS2{channel: channel} = feed
+          ) do
         %RSS2.Channel{
           image: image
         } = channel
@@ -234,7 +238,7 @@ defmodule Fiet.RSS2 do
         {"description", :description},
         {"url", :url},
         {"width", :width},
-        {"height", :height},
+        {"height", :height}
       ]
 
       Enum.each(@image_tags, fn {tag_name, key} ->

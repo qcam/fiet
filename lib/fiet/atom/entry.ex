@@ -11,6 +11,6 @@ defmodule Fiet.Atom.Entry do
     :rights,
     authors: [],
     categories: [],
-    contributors: [],
+    contributors: []
   ]
 end

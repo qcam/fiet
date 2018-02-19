@@ -8,7 +8,7 @@ defmodule Fiet.Atom.Link do
       type: get_attribute_value(attributes, "type"),
       href_lang: get_attribute_value(attributes, "hreflang"),
       title: get_attribute_value(attributes, "title"),
-      length: get_attribute_value(attributes, "length"),
+      length: get_attribute_value(attributes, "length")
     }
   end
 

@@ -30,7 +30,7 @@ defmodule Fiet.Atom do
       | entries: Enum.reverse(entries),
         categories: Enum.reverse(categories),
         authors: Enum.reverse(authors),
-        contributors: Enum.reverse(contributors),
+        contributors: Enum.reverse(contributors)
     }
   end
 
@@ -99,7 +99,7 @@ defmodule Fiet.Atom do
     {"id", :id},
     {"updated", :updated},
     {"logo", :logo},
-    {"icon", :icon},
+    {"icon", :icon}
   ]
 
   Enum.each(@feed_simple_tags, fn {feed_tag, feed_key} ->
@@ -128,7 +128,7 @@ defmodule Fiet.Atom do
 
   @entry_simple_tags [
     {"id", :id},
-    {"updated", :updated},
+    {"updated", :updated}
   ]
 
   Enum.each(@entry_simple_tags, fn {tag_name, key} ->
@@ -176,7 +176,8 @@ defmodule Fiet.Atom do
 
           %{feed | entries: [entry | entries]}
 
-        {:error, _reason} -> feed
+        {:error, _reason} ->
+          feed
       end
     end
   end)
