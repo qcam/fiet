@@ -1,15 +1,3 @@
-defmodule Fiet.RSS2.StandardParser do
-  use Fiet.RSS2
-end
-
-defmodule Fiet.RSS2.OutstandingParser do
-  use Fiet.RSS2,
-    extras: [
-      channel: [{"atom:link", "atom_link"}],
-      item: [{"dc:creator", "creator"}]
-    ]
-end
-
 defmodule Fiet.RSS2Test do
   use ExUnit.Case, async: true
 
@@ -18,7 +6,7 @@ defmodule Fiet.RSS2Test do
   test "parse/1 with standard parser" do
     rss = File.read!("./test/support/fixture/simple.rss.xml")
 
-    {:ok, feed} = RSS2.StandardParser.parse(rss)
+    {:ok, channel} = RSS2.parse(rss)
 
     %RSS2.Channel{
       title: title,
@@ -28,7 +16,7 @@ defmodule Fiet.RSS2Test do
       categories: categories,
       image: image,
       items: items
-    } = feed.channel
+    } = channel
 
     assert title == "Liftoff News"
     assert link == "http://liftoff.msfc.nasa.gov/"
@@ -83,38 +71,13 @@ defmodule Fiet.RSS2Test do
            }
   end
 
-  test "parse/1 for customized parser" do
-    rss = File.read!("./test/support/fixture/outstanding.rss.xml")
-
-    {:ok, feed} = Fiet.RSS2.OutstandingParser.parse(rss)
-
-    channel = feed.channel
-    assert channel.title == "Liftoff News"
-    assert channel.link == "http://liftoff.msfc.nasa.gov/"
-    assert channel.description == "Liftoff to Space Exploration."
-    assert channel.last_build_date == "Tue, 10 Jun 2003 09:41:01 GMT"
-    assert {attrs, content} = Map.fetch!(channel.extras, "atom_link")
-
-    assert attrs == [
-             {"href", "http://superfeedr.com"},
-             {"rel", "hub"}
-           ]
-
-    assert content == ""
-
-    assert [item | _] = channel.items
-    assert item.title == "Star City"
-    assert extras = item.extras
-    assert Map.fetch!(extras, "creator") == {[], "John Doe"}
-  end
-
   test "parse/1 with non RSS 2.0 feed" do
     rss = """
     <?xml version="1.0" encoding="UTF-8"?>
     <foo></foo>
     """
 
-    assert {:error, reason} = Fiet.RSS2.StandardParser.parse(rss)
+    assert {:error, reason} = Fiet.RSS2.parse(rss)
     assert reason == "unexpected root tag \"foo\""
   end
 end
