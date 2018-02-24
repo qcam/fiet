@@ -1,14 +1,37 @@
 defmodule Fiet.Atom do
   alias Fiet.Atom
 
+  defmodule ParsingError do
+    defexception [:reason]
+
+    def message(%__MODULE__{reason: reason}) do
+      {error_type, term} = reason
+
+      format_message(error_type, term)
+    end
+
+    defp format_message(:not_atom, root_tag) do
+      "unexpected root tag #{inspect(root_tag)}, expected \"feed\""
+    end
+  end
+
   def parse(document) when is_binary(document) do
-    case Fiet.StackParser.parse(document, %Atom.Feed{}, __MODULE__) do
+    try do
+      Fiet.StackParser.parse(document, %Atom.Feed{}, __MODULE__)
+    rescue
+      exception in ParsingError ->
+        {:error, exception.reason}
+    else
       {:ok, %Atom.Feed{} = feed} ->
         {:ok, feed}
 
       {:error, _reason} = error ->
         error
     end
+  end
+
+  def on_start_element({root_tag, _, _}, [], _feed) when root_tag != "feed" do
+    raise ParsingError, reason: {:not_atom, root_tag}
   end
 
   def on_start_element({"entry", _, _}, [{"feed", _, _} | []], feed) do

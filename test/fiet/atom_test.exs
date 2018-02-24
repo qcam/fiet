@@ -132,4 +132,14 @@ defmodule Fiet.AtomTest do
 
     assert updated == "2018-02-19T17:10:48+00:00"
   end
+
+  test "parse/1 with a non-Atom feed" do
+    non_atom = """
+    <?xml version="1.0" ?>
+    <foo></foo>
+    """
+
+    assert {:error, reason} = Atom.parse(non_atom)
+    assert reason == {:not_atom, "foo"}
+  end
 end
