@@ -30,17 +30,17 @@ defmodule Fiet.Atom do
     end
   end
 
-  def on_start_element({root_tag, _, _}, [], _feed) when root_tag != "feed" do
+  def handle_event(:start_element, {root_tag, _, _}, [], _feed) when root_tag != "feed" do
     raise ParsingError, reason: {:not_atom, root_tag}
   end
 
-  def on_start_element({"entry", _, _}, [{"feed", _, _} | []], feed) do
+  def handle_event(:start_element, {"entry", _, _}, [{"feed", _, _} | []], feed) do
     %{entries: entries} = feed
 
     %{feed | entries: [%Atom.Entry{} | entries]}
   end
 
-  def on_end_element({"entry", _, _}, [{"feed", _, _} | []], feed) do
+  def handle_event(:end_element, {"entry", _, _}, [{"feed", _, _} | []], feed) do
     %{
       entries: entries,
       categories: categories,
@@ -69,13 +69,13 @@ defmodule Fiet.Atom do
   ]
 
   Enum.each(@people_tags, fn {people_tag, people_key} ->
-    def on_start_element({unquote(people_tag), _, _}, [{"feed", _, _} | _], feed) do
+    def handle_event(:start_element, {unquote(people_tag), _, _}, [{"feed", _, _} | _], feed) do
       people = [%Atom.Person{} | feed.unquote(people_key)]
 
       Map.put(feed, unquote(people_key), people)
     end
 
-    def on_start_element({unquote(people_tag), _, _}, [{"entry", _, _} | _], feed) do
+    def handle_event(:start_element, {unquote(people_tag), _, _}, [{"entry", _, _} | _], feed) do
       [entry | entries] = feed.entries
 
       people = [%Atom.Person{} | entry.unquote(people_key)]
@@ -86,7 +86,8 @@ defmodule Fiet.Atom do
     end
 
     Enum.each(@person_tags, fn {person_tag, person_key} ->
-      def on_end_element(
+      def handle_event(
+            :end_element,
             {unquote(person_tag), _, content},
             [{unquote(people_tag), _, _} | [{"feed", _, _} | _]],
             feed
@@ -98,7 +99,8 @@ defmodule Fiet.Atom do
         Map.put(feed, unquote(people_key), [person | people])
       end
 
-      def on_end_element(
+      def handle_event(
+            :end_element,
             {unquote(person_tag), _, content},
             [{unquote(people_tag), _, _} | [{"entry", _, _} | _]],
             feed
@@ -114,7 +116,7 @@ defmodule Fiet.Atom do
     end)
   end)
 
-  def on_start_element(_element, _stack, feed) do
+  def handle_event(:start_element, _element, _stack, feed) do
     feed
   end
 
@@ -126,24 +128,24 @@ defmodule Fiet.Atom do
   ]
 
   Enum.each(@feed_simple_tags, fn {feed_tag, feed_key} ->
-    def on_end_element({unquote(feed_tag), _, content}, [{"feed", _, _} | _], feed) do
+    def handle_event(:end_element, {unquote(feed_tag), _, content}, [{"feed", _, _} | _], feed) do
       Map.put(feed, unquote(feed_key), content)
     end
   end)
 
-  def on_end_element({"category", _, _} = element, [{"feed", _, _} | _], feed) do
+  def handle_event(:end_element, {"category", _, _} = element, [{"feed", _, _} | _], feed) do
     category = Atom.Category.from_element(element)
 
     %{feed | categories: [category | feed.categories]}
   end
 
-  def on_end_element({"link", _, _} = element, [{"feed", _, _} | _], feed) do
+  def handle_event(:end_element, {"link", _, _} = element, [{"feed", _, _} | _], feed) do
     link = Atom.Link.from_element(element)
 
     %{feed | link: link}
   end
 
-  def on_end_element({"generator", _, _} = element, [{"feed", _, _} | _], feed) do
+  def handle_event(:end_element, {"generator", _, _} = element, [{"feed", _, _} | _], feed) do
     generator = Atom.Generator.from_element(element)
 
     %{feed | generator: generator}
@@ -155,7 +157,7 @@ defmodule Fiet.Atom do
   ]
 
   Enum.each(@entry_simple_tags, fn {tag_name, key} ->
-    def on_end_element({unquote(tag_name), _, content}, [{"entry", _, _} | _], feed) do
+    def handle_event(:end_element, {unquote(tag_name), _, content}, [{"entry", _, _} | _], feed) do
       %{entries: [entry | entries]} = feed
 
       entry = Map.put(entry, unquote(key), content)
@@ -171,7 +173,12 @@ defmodule Fiet.Atom do
   ]
 
   Enum.each(@feed_text_construct_tags, fn {tag_name, key} ->
-    def on_end_element({unquote(tag_name), attributes, content}, [{"feed", _, _} | _], feed) do
+    def handle_event(
+          :end_element,
+          {unquote(tag_name), attributes, content},
+          [{"feed", _, _} | _],
+          feed
+        ) do
       case extract_text(attributes, content) do
         {:ok, content} ->
           Map.put(feed, unquote(key), content)
@@ -190,7 +197,12 @@ defmodule Fiet.Atom do
   ]
 
   Enum.each(@entry_text_construct_tags, fn {tag_name, key} ->
-    def on_end_element({unquote(tag_name), attributes, content}, [{"entry", _, _} | _], feed) do
+    def handle_event(
+          :end_element,
+          {unquote(tag_name), attributes, content},
+          [{"entry", _, _} | _],
+          feed
+        ) do
       case extract_text(attributes, content) do
         {:ok, content} ->
           %{entries: [entry | entries]} = feed
@@ -205,7 +217,7 @@ defmodule Fiet.Atom do
     end
   end)
 
-  def on_end_element({"link", _, _} = element, [{"entry", _, _} | _], feed) do
+  def handle_event(:end_element, {"link", _, _} = element, [{"entry", _, _} | _], feed) do
     %{entries: [entry | entries]} = feed
 
     link = Atom.Link.from_element(element)
@@ -214,7 +226,7 @@ defmodule Fiet.Atom do
     %{feed | entries: [entry | entries]}
   end
 
-  def on_end_element(_element, _stack, feed) do
+  def handle_event(:end_element, _element, _stack, feed) do
     feed
   end
 

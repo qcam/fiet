@@ -50,7 +50,7 @@ defmodule Fiet.RSS2.Engine do
       end
 
       # First element
-      def on_start_element(element, [], feed) do
+      def handle_event(:start_element, element, [], feed) do
         case element do
           {"rss", attributes, _content} ->
             feed
@@ -60,24 +60,25 @@ defmodule Fiet.RSS2.Engine do
         end
       end
 
-      def on_start_element({"channel", _, _}, stack, feed) do
+      def handle_event(:start_element, {"channel", _, _}, stack, feed) do
         channel = %RSS2.Channel{}
 
         %{feed | channel: channel}
       end
 
-      def on_start_element({"item", _, _}, _stack, %{channel: channel} = feed) do
+      def handle_event(:start_element, {"item", _, _}, _stack, %{channel: channel} = feed) do
         %RSS2.Channel{items: items} = channel
         channel = %{channel | items: [%RSS2.Item{extras: %{}} | items]}
 
         %{feed | channel: channel}
       end
 
-      def on_start_element(_element, _stack, feed) do
+      def handle_event(:start_element, _element, _stack, feed) do
         feed
       end
 
-      def on_end_element(
+      def handle_event(
+            :end_element,
             element,
             [{"image", _, _} | [{"channel", _, _} | _]],
             %{channel: channel} = feed
@@ -94,11 +95,11 @@ defmodule Fiet.RSS2.Engine do
         %{feed | channel: channel}
       end
 
-      def on_end_element(element, [{"channel", _, _} | _], %{channel: channel} = feed) do
+      def handle_event(:end_element, element, [{"channel", _, _} | _], %{channel: channel} = feed) do
         %{feed | channel: maybe_enrich_channel(element, channel)}
       end
 
-      def on_end_element(element, [{"item", _, _} | _], %{channel: channel} = feed) do
+      def handle_event(:end_element, element, [{"item", _, _} | _], %{channel: channel} = feed) do
         %RSS2.Channel{
           items: [item | items]
         } = channel
@@ -109,7 +110,7 @@ defmodule Fiet.RSS2.Engine do
         %{feed | channel: channel}
       end
 
-      def on_end_element(element, _stack, feed) do
+      def handle_event(:end_element, element, _stack, feed) do
         feed
       end
 
