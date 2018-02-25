@@ -77,7 +77,7 @@ defmodule Fiet.RSS2Test do
     <foo></foo>
     """
 
-    assert {:error, reason} = Fiet.RSS2.parse(rss)
-    assert reason == "unexpected root tag \"foo\""
+    assert {:error, reason} = RSS2.parse(rss)
+    assert reason == %RSS2.Engine.ParsingError{reason: {:not_rss2, "foo"}}
   end
 end

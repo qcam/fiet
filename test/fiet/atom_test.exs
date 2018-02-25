@@ -140,6 +140,6 @@ defmodule Fiet.AtomTest do
     """
 
     assert {:error, reason} = Atom.parse(non_atom)
-    assert reason == {:not_atom, "foo"}
+    assert reason == %Fiet.Atom.ParsingError{reason: {:not_atom, "foo"}}
   end
 end
