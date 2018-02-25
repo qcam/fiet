@@ -1,4 +1,28 @@
 defmodule Fiet.Atom do
+  @moduledoc """
+  Atom parser, comply with [RFC 4287](https://tools.ietf.org/html/rfc4287).
+
+  ## Text constructs
+
+  Fiet supports two out of three text contructs in Atom: `text` and `html`.
+  `xhtml` is not supported.
+
+  In text constructs fields, the returning format is `{format, data}`. If "type"
+  attribute does not exist in the tag, format will be `text` by default.
+
+  For example, `<title type="html">Less: &lt;em> &amp;lt; &lt;/em></title>` will
+  give you `{:html, "Less: &lt;em> &amp;lt; &lt;/em>"}`.
+
+  ## Person constructs
+
+  There are three attributes in Person construct: name, uri and email, both
+  contributors and authors returned by the parser will be in `Fiet.Atom.Person`
+  struct.
+
+  See `Fiet.Atom.Person` for more information.
+
+  """
+
   alias Fiet.Atom
 
   defmodule ParsingError do
@@ -14,6 +38,76 @@ defmodule Fiet.Atom do
       "unexpected root tag #{inspect(root_tag)}, expected \"feed\""
     end
   end
+
+  @doc """
+  Parses Atom document feed.
+
+  ## Example
+
+      iex> Fiet.Atom.parse(atom)
+      {:ok,
+      %Fiet.Atom.Feed{
+        authors: [],
+        categories: [
+         %Fiet.Atom.Category{label: "Space", scheme: nil, term: "space"},
+         %Fiet.Atom.Category{label: "Science", scheme: nil, term: "science"}
+        ],
+        contributors: [],
+        entries: [
+         %Fiet.Atom.Entry{
+           authors: [
+             %Fiet.Atom.Person{
+               email: "john.doe@example.com",
+               name: "John Doe",
+               uri: "http://example.org/"
+             }
+           ],
+           categories: [],
+           content: {:text, "Test Content"},
+           contributors: [
+             %Fiet.Atom.Person{email: nil, name: "Joe Gregorio", uri: nil},
+             %Fiet.Atom.Person{email: nil, name: "Sam Ruby", uri: nil}
+           ],
+           id: "tag:example.org,2003:3.2397",
+           link: %Fiet.Atom.Link{
+             href: "http://example.org/audio/ph34r_my_podcast.mp3",
+             href_lang: nil,
+             length: "1337",
+             rel: "enclosure",
+             title: nil,
+             type: "audio/mpeg"
+           },
+           published: nil,
+           rights: {:xhtml, :skipped},
+           source: nil,
+           summary: nil,
+           title: {:text, "Atom draft-07 snapshot"},
+           updated: "2005-07-31T12:29:29Z"
+         }
+        ],
+        generator: %Fiet.Atom.Generator{
+         text: "\n       Example Toolkit\n     ",
+         uri: "http://www.example.com/",
+         version: "1.0"
+        },
+        icon: nil,
+        id: "tag:example.org,2003:3",
+        link: %Fiet.Atom.Link{
+         href: "http://example.org/feed.atom",
+         href_lang: nil,
+         length: nil,
+         rel: "self",
+         title: nil,
+         type: "application/atom+xml"
+        },
+        logo: nil,
+        rights: {:text, "Copyright (c) 2003, Mark Pilgrim"},
+        subtitle: {:html,
+        "\n       A &lt;em&gt;lot&lt;/em&gt; of effort\n       went into making this effortless\n     "},
+        title: {:text, "dive into mark"},
+        updated: "2005-07-31T12:29:29Z"
+      }}
+  """
 
   def parse(document) when is_binary(document) do
     try do
@@ -32,6 +126,8 @@ defmodule Fiet.Atom do
         error
     end
   end
+
+  @doc false
 
   def handle_event(:start_element, {root_tag, _, _}, [], _feed) when root_tag != "feed" do
     {:stop, {:not_atom, root_tag}}

@@ -1,11 +1,11 @@
 defmodule Fiet.RSS2.Channel do
   defmodule Cloud do
     @type t :: %__MODULE__{
-            domain: binary,
-            port: binary,
-            path: binary,
-            register_procedure: binary,
-            protocol: binary
+            domain: binary | nil,
+            port: binary | nil,
+            path: binary | nil,
+            register_procedure: binary | nil,
+            protocol: binary | nil
           }
 
     defstruct [:domain, :port, :path, :register_procedure, :protocol]
@@ -13,12 +13,19 @@ defmodule Fiet.RSS2.Channel do
 
   @moduledoc """
   A struct that represents `<channel>` in RSS 2.0.
+
+  ### extras attribute
+
+  `Fiet.RSS2.Channel` contains an `extras` attribute which can be used to store
+  extra data provided by the feeds (which don't strictly follow RSS 2.0 specs).
+  See `Fiet.RSS2.Engine` for more information.
+  
   """
 
   @type t :: %__MODULE__{
-          title: binary,
-          link: binary,
-          description: binary,
+          title: binary | nil,
+          link: binary | nil,
+          description: binary | nil,
           language: binary | nil,
           copyright: binary | nil,
           managing_editor: binary | nil,

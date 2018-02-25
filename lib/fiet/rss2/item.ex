@@ -1,9 +1,9 @@
 defmodule Fiet.RSS2.Item do
   defmodule Enclosure do
     @type t :: %__MODULE__{
-            url: binary,
-            length: binary,
-            type: binary
+            url: binary | nil,
+            length: binary | nil,
+            type: binary | nil
           }
 
     defstruct [:url, :length, :type]

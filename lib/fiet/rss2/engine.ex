@@ -54,6 +54,7 @@ defmodule Fiet.RSS2.Engine do
         end
       end
 
+      @doc false
       def handle_event(:start_element, {root_tag, _, _}, [], feed) when root_tag != "rss" do
         {:stop, {:not_rss2, root_tag}}
       end

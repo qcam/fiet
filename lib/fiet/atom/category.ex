@@ -1,4 +1,10 @@
 defmodule Fiet.Atom.Category do
+  @type t :: %__MODULE__{
+          term: binary | nil,
+          scheme: binary | nil,
+          label: binary | nil
+        }
+
   defstruct [:term, :scheme, :label]
 
   def from_element({"category", attributes, _}) do

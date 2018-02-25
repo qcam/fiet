@@ -1,7 +1,7 @@
 defmodule Fiet.RSS2.Category do
   @type t :: %__MODULE__{
-          value: binary,
-          domain: binary
+          value: binary | nil,
+          domain: binary | nil
         }
 
   defstruct [:value, :domain]

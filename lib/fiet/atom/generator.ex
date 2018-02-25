@@ -1,6 +1,13 @@
 defmodule Fiet.Atom.Generator do
+  @type t :: %__MODULE__{
+          uri: binary | nil,
+          version: binary | nil,
+          text: binary | nil
+        }
+
   defstruct [:uri, :version, :text]
 
+  @doc false
   def from_element({"generator", attributes, content}) do
     %__MODULE__{
       uri: get_attribute_value(attributes, "uri"),

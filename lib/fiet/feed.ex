@@ -1,4 +1,17 @@
 defmodule Fiet.Feed do
+  @moduledoc """
+  A unified format for all the feeds supported by Fiet.
+  """
+
+  @type t :: %__MODULE__{
+          title: binary | nil,
+          link: binary | nil,
+          description: binary | nil,
+          updated_at: binary | nil,
+          categories: list(binary),
+          items: list(Fiet.Item.t()),
+        }
+
   defstruct [
     :title,
     :link,
@@ -9,6 +22,8 @@ defmodule Fiet.Feed do
   ]
 
   alias Fiet.{Atom, RSS2, Item}
+
+  @doc false
 
   def new(%Atom.Feed{} = feed) do
     %{

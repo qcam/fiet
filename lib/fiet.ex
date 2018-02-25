@@ -1,11 +1,26 @@
 defmodule Fiet do
   @moduledoc """
-  Fiet is a feeds parser in Elixir, which aims to provide extensibility, speed, and
-  standard compliance to feed parsing.
+  Fiet is a feed parser which aims to provide extensibility, speed, and standard
+  compliance.
 
-  Currently Fiet supports the following formats:
+  Currently Fiet supports [RSS 2.0](cyber.harvard.edu/rss/rss.html) and [Atom](https://tools.ietf.org/html/rfc4287).
 
-  * `Fiet.RSS2`.
+  ## Feed format detecting
+
+  There are two main functions in this module: `parse/1` and `parse!/1`, which
+  provide detecting parsing. That means that it will detect the format of the
+  XML document input then parse and map it into `Fiet.Feed`, which is the
+  unified format of all the feed formats supported by Fiet.
+
+  Please note that detecting logic works by checking the root tag of the XML
+  document, it does not mean to validate the XML document.
+
+  ## Detecting overhead
+
+  If you know exactly the feed format of the XML document you are going to parse,
+  you are recommended to use `Fiet.Atom` or `Fiet.RSS2` to avoid overhead. That
+  will give you the full data parsed from the feed document.
+
   """
 
   alias Fiet.{
@@ -14,8 +29,16 @@ defmodule Fiet do
   }
 
   @doc """
-  Parses RSS binary into `Fiet.Feed`.
+  Parse RSS document into a feed.
+
+  ## Example
+
+      rss = File.read!("/path/to/rss")
+      {:ok, %Fiet.Feed{} = feed} = Fiet.parse(rss)
+
   """
+
+  @spec parse(data :: binary) :: {:ok, feed :: Fiet.Feed.t()} | {:error, reason :: any}
   def parse(data) when is_binary(data) do
     case detect_format(data) do
       :atom -> parse_atom(data)
@@ -24,6 +47,16 @@ defmodule Fiet do
     end
   end
 
+  @doc """
+  Same as `parse/1`, but this will raise when error happen.
+
+  ## Example
+
+      rss = File.read!("/path/to/rss")
+      %Fiet.Feed{} = Fiet.parse(rss)
+  """
+
+  @spec parse!(data :: binary) :: Fiet.Feed.t()
   def parse!(data) do
     case parse(data) do
       {:ok, feed} ->
