@@ -1,7 +1,7 @@
 defmodule Fiet.Mixfile do
   use Mix.Project
 
-  @version "0.1.0-rc1"
+  @version "0.2.0"
 
   def project do
     [
@@ -23,7 +23,7 @@ defmodule Fiet.Mixfile do
   def application, do: []
 
   defp description() do
-    "Fiet is a feeds parser in Elixir, which aims to provide extensibility, speed," <>
+    "Fiết is a feeds parser in Elixir, which aims to provide extensibility, speed," <>
       " and standard compliance to feed parsing."
   end
 

@@ -6,7 +6,7 @@ An extendable feeds parser in Elixir.
 
 ```elixir
 def deps do
-  [{:fiet, "~> 0.1.0"}]
+  [{:fiet, "~> 0.2.0"}]
 end
 ```
 
