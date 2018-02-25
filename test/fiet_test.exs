@@ -25,12 +25,9 @@ defmodule FietTest do
     assert feed = Fiet.parse!(atom)
 
     assert %Fiet.Feed{
-      title: "dive into mark",
-      link: "http://example.org/feed.atom",
-    } = feed
-
-
-
+             title: "dive into mark",
+             link: "http://example.org/feed.atom"
+           } = feed
 
     rss = File.read!("./test/support/fixture/simple.rss.xml")
 
