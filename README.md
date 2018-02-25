@@ -14,75 +14,45 @@ end
 
 Full documentation can be found on [HexDocs](https://hexdocs.pm/fiet).
 
-### RSS 2.0
+Current Fiết supports two feed formats: [Atom - RFC 4287](https://tools.ietf.org/html/rfc4287) and [RSS 2.0](cyber.harvard.edu/rss/rss.html).
 
-If the feed you are parsing complies with [RSS 2.0](http://cyber.harvard.edu/rss/rss.html), a standard parser can be implemented with:
+To start parsing, go:
 
 ```elixir
-defmodule StandardParser do
-  use Fiet.RSS2
-end
-
-iex> NormalParser.parse(rss)
+iex> Fiet.parse(File.read!("/path/to/rss.xml"))
 {:ok,
- %Fiet.RSS2{
-   channel: %Fiet.RSS2.Channel{
-     category: nil,
-     cloud: nil,
-     copyright: nil,
-     description: "Liftoff to Space Exploration.",
-     docs: "http://blogs.law.harvard.edu/tech/rss",
-     extras: %{},
-     generator: "Weblog Editor 2.0",
-     image: nil,
-     language: "en-us",
-     last_build_date: "Tue, 10 Jun 2003 09:41:01 GMT",
-     link: "http://liftoff.msfc.nasa.gov/",
-     managing_editor: "editor@example.com",
-     pub_date: "Tue, 10 Jun 2003 04:00:00 GMT",
-     rating: nil,
-     skip_days: nil,
-     skip_hours: nil,
-     text_input: nil,
-     title: "Liftoff News",
-     ttl: nil,
-     web_master: "webmaster@example.com"
-     items: [
-       %Fiet.RSS2.Item{
-         author: nil,
-         category: nil,
-         comments: nil,
-         description: "How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's &lt;a href=\"http://howe.iki.rssi.ru/GCTC/gctc_e.htm\"&gt;Star City&lt;/a&gt;.",
-         enclosure: nil,
-         extras: %{},
-         guid: "http://liftoff.msfc.nasa.gov/2003/06/03.html#item573",
-         link: "http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp",
-         pub_date: "Tue, 03 Jun 2003 09:39:21 GMT",
-         source: nil,
-         title: "Star City"
-       },
-       ...
-     ]
-   }
- }
+ %Fiet.Feed{
+   categories: ["Science", "Space"],
+   description: "Liftoff to Space Exploration.",
+   items: [
+     %Fiet.Item{
+       description: "How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's &lt;a href=\"http://howe.iki.rssi.ru/GCTC/gctc_e.htm\"&gt;Star City&lt;/a&gt;.",
+       id: "http://liftoff.msfc.nasa.gov/2003/06/03.html#item573",
+       link: "http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp",
+       published_at: "Tue, 03 Jun 2003 09:39:21 GMT",
+       title: "Star City"
+     },
+     %Fiet.Item{
+       description: "Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a &lt;a href=\"http://science.nasa.gov/headlines/y2003/30may_solareclipse.htm\"&gt;partial eclipse of the Sun&lt;/a&gt; on Saturday, May 31st.",
+       id: "http://liftoff.msfc.nasa.gov/2003/05/30.html#item572",
+       link: nil,
+       published_at: "Fri, 30 May 2003 11:06:42 GMT",
+       title: "It looks cool"
+     }
+   ],
+   link: "http://liftoff.msfc.nasa.gov/",
+   title: "Liftoff News",
+   updated_at: "Tue, 10 Jun 2003 09:41:01 GMT"
+ }}
 ```
 
-Fiet also supports parsing non-standard tags in the feed with `:extras` option.
-
-```elixir
-defmodule OutstandingFeed do
-  use Fiet.RSS2, extras: [
-    channel: [{"atom:link", "atom:link"}],
-    item: [{"content:encoded", "encoded_content"}]
-  ]
-end
-```
+Fiết also supports customized RSS 2.0, in case the feed document does not strictly follow the specs. See full documentation for more information on [HexDocs](https://hexdocs.pm/fiet).
 
 ## Why is it called "Fiết"?
 
-First of all, all the good names are taken.
+To be honest, all the good names had been taken.
 
-"Fiết", an hybrid Vietnamese word which is pronounced as "Feed".
+"Fiết", a not-so-Vietnamese word that's pronounced 90% like "feed".
 
 ## Contributing
 
