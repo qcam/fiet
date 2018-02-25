@@ -1,6 +1,14 @@
 defmodule Fiet.RSS2.Engine do
   defmodule ParsingError do
-    defexception [:message]
+    defexception [:reason]
+
+    def message(%__MODULE__{reason: reason}) do
+      format_message(reason)
+    end
+
+    defp format_message({:not_atom, root_tag}) do
+      "unexpected root tag #{inspect(root_tag)}, expected \"rss\""
+    end
   end
 
   @moduledoc """
@@ -36,28 +44,18 @@ defmodule Fiet.RSS2.Engine do
       extra_channel_tags = Keyword.get(extras, :channel, [])
 
       def parse(document) do
-        try do
-          Fiet.StackParser.parse(document, %{channel: %RSS2.Channel{}}, __MODULE__)
-        rescue
-          error in [Fiet.RSS2.Engine.ParsingError] ->
-            {:error, error.message}
-        else
+        case Fiet.StackParser.parse(document, %{channel: %RSS2.Channel{}}, __MODULE__) do
           {:ok, %{channel: channel} = feed} ->
             channel = %{channel | items: Enum.reverse(channel.items)}
-
             {:ok, channel}
+
+          {:ok, {:not_rss2, _root_tag} = reason} ->
+            {:error, %ParsingError{reason: reason}}
         end
       end
 
-      # First element
-      def handle_event(:start_element, element, [], feed) do
-        case element do
-          {"rss", attributes, _content} ->
-            feed
-
-          {tag_name, _attributes, _content} ->
-            raise(ParsingError, message: "unexpected root tag #{inspect(tag_name)}")
-        end
+      def handle_event(:start_element, {root_tag, _, _}, [], feed) when root_tag != "rss" do
+        {:stop, {:not_rss2, root_tag}}
       end
 
       def handle_event(:start_element, {"channel", _, _}, stack, feed) do

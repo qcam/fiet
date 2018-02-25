@@ -25,13 +25,16 @@ defmodule Fiet.Atom do
       {:ok, %Atom.Feed{} = feed} ->
         {:ok, feed}
 
+      {:ok, {:not_atom, _root_tag} = reason} ->
+        {:error, %ParsingError{reason: reason}}
+
       {:error, _reason} = error ->
         error
     end
   end
 
   def handle_event(:start_element, {root_tag, _, _}, [], _feed) when root_tag != "feed" do
-    raise ParsingError, reason: {:not_atom, root_tag}
+    {:stop, {:not_atom, root_tag}}
   end
 
   def handle_event(:start_element, {"entry", _, _}, [{"feed", _, _} | []], feed) do
