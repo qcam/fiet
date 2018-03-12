@@ -40,7 +40,7 @@ defmodule Fiet.StackParser do
     {:ok, {[element | stack], state, handler}}
   end
 
-  def handle_event(:end_element, {tag_name}, {stack, state, handler}) do
+  def handle_event(:end_element, tag_name, {stack, state, handler}) do
     [{^tag_name, attributes, content} | stack] = stack
 
     content = content |> Enum.reverse() |> Enum.join("")
@@ -52,6 +52,10 @@ defmodule Fiet.StackParser do
   end
 
   def handle_event(_event_type, _event_data, state), do: {:ok, state}
+
+  def handle_entity_reference(reference_name) do
+    [?&, reference_name, ?;]
+  end
 
   defp emit_event(event_type, event_data, stack, state, handler) when is_atom(handler) do
     handler.handle_event(event_type, event_data, stack, state)
