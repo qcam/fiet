@@ -61,7 +61,6 @@ defmodule Fiet.AtomTest do
              updated: "2005-07-31T12:29:29Z",
              link: link,
              published: nil,
-             source: nil,
              summary: nil,
              content: {:text, "Test Content"},
              rights: {:xhtml, :skipped},
