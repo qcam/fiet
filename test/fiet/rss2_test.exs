@@ -62,7 +62,7 @@ defmodule Fiet.RSS2Test do
     assert item_link == "http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp"
 
     assert item_description ==
-             "How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's &lt;a href=\"http://howe.iki.rssi.ru/GCTC/gctc_e.htm\"&gt;Star City&lt;/a&gt;."
+             "How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's <a href=\"http://howe.iki.rssi.ru/GCTC/gctc_e.htm\">Star City</a>."
 
     assert item_enclosure == %RSS2.Item.Enclosure{
              length: "78645",

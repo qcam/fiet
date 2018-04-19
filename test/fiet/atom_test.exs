@@ -22,7 +22,7 @@ defmodule Fiet.AtomTest do
     assert title == "dive into mark"
 
     assert subtitle ==
-             "\n       A &lt;em&gt;lot&lt;/em&gt; of effort\n       went into making this effortless\n     "
+             "\n       A <em>lot</em> of effort\n       went into making this effortless\n     "
 
     assert link == %Fiet.Atom.Link{
              href: "http://example.org/feed.atom",
