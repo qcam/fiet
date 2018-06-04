@@ -19,7 +19,7 @@ defmodule Fiet.RSS2.Engine do
   A RSS 2.0 compliant parser can be implemented with:
 
       defmodule StandardParser do
-        use Fiet.RSS2
+        use Fiet.RSS2.Engine
       end
 
   Parsers can also be customized by using `:extras` option, with `:channel` being
@@ -27,7 +27,7 @@ defmodule Fiet.RSS2.Engine do
   `<item>` in the feed.
 
       defmodule NotSoStardardParser do
-        use Fiet.RSS2, [extras: [
+        use Fiet.RSS2.Engine, [extras: [
           channel: [{"atom:link", "atom:link"}],
           item: [{"content:encoded", "encoded_content"}]
         ]]
