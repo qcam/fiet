@@ -24,6 +24,15 @@ defmodule Fiet.FeedTest do
             href: "https://example.com/item/1"
           },
           published: "2018-01-0111:40:41+00:00"
+        },
+        %Atom.Entry{
+          id: "2",
+          title: {:text, "item 2"},
+          summary: {:text, "item 2 summary"},
+          link: %Atom.Link{
+            href: "https://example.com/item/2"
+          },
+          updated: "2018-01-0111:40:41+00:00"
         }
       ]
     }
@@ -34,14 +43,22 @@ defmodule Fiet.FeedTest do
              link: "https://example.com",
              updated_at: "2018-01-0111:40:41+00:00",
              categories: ["science", "space"],
-             items: [item]
+             items: [item1, item2]
            } = Fiet.Feed.new(atom_feed)
 
-    assert item == %Fiet.Item{
+    assert item1 == %Fiet.Item{
              id: "1",
              title: "item 1",
              description: "item 1 summary",
              link: "https://example.com/item/1",
+             published_at: "2018-01-0111:40:41+00:00"
+           }
+
+    assert item2 == %Fiet.Item{
+             id: "2",
+             title: "item 2",
+             description: "item 2 summary",
+             link: "https://example.com/item/2",
              published_at: "2018-01-0111:40:41+00:00"
            }
   end
