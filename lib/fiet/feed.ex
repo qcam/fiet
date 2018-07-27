@@ -89,7 +89,8 @@ defmodule Fiet.Feed do
       title: title,
       link: link,
       summary: summary,
-      published: published
+      published: published,
+      updated: updated
     } = entry
 
     item = %Item{
@@ -97,7 +98,7 @@ defmodule Fiet.Feed do
       title: text_construct(title),
       description: text_construct(summary),
       link: extract_atom_link(link),
-      published_at: published
+      published_at: published || updated
     }
 
     map_items(items, [item | acc])
