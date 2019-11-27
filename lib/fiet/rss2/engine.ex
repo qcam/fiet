@@ -51,6 +51,9 @@ defmodule Fiet.RSS2.Engine do
 
           {:ok, {:not_rss2, _root_tag} = reason} ->
             {:error, %ParsingError{reason: reason}}
+
+          {:error, reason} -> 
+            {:error, %ParsingError{reason: reason}}
         end
       end
 
