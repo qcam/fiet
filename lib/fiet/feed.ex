@@ -28,7 +28,7 @@ defmodule Fiet.Feed do
   def new(%Atom.Feed{} = feed) do
     %{
       title: title,
-      link: link,
+      links: links,
       subtitle: subtitle,
       updated: updated,
       categories: categories,
@@ -37,7 +37,7 @@ defmodule Fiet.Feed do
 
     %__MODULE__{
       title: text_construct(title),
-      link: extract_atom_link(link),
+      link: extract_atom_link(links),
       description: text_construct(subtitle),
       updated_at: updated,
       categories: map_categories(categories),
@@ -127,6 +127,7 @@ defmodule Fiet.Feed do
   defp text_construct({_type, content}), do: content
   defp text_construct(nil), do: nil
 
+  defp extract_atom_link(links) when is_list(links), do: extract_atom_link(List.last(links))
   defp extract_atom_link(%Atom.Link{href: href}), do: href
   defp extract_atom_link(nil), do: nil
 end

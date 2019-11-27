@@ -7,9 +7,12 @@ defmodule Fiet.FeedTest do
     atom_feed = %Atom.Feed{
       title: {:text, "title"},
       subtitle: {:text, "subtitle"},
-      link: %Atom.Link{
-        href: "https://example.com"
-      },
+      links: [
+        %Atom.Link{
+          href: "https://example.com",
+          rel: "self"
+        }
+      ],
       updated: "2018-01-0111:40:41+00:00",
       categories: [
         %Atom.Category{term: "science"},

@@ -141,6 +141,7 @@ defmodule Fiet.Atom do
 
   def handle_event(:end_element, {"entry", _, _}, [{"feed", _, _} | []], feed) do
     %{
+      links: links,
       entries: entries,
       categories: categories,
       authors: authors,
@@ -149,7 +150,8 @@ defmodule Fiet.Atom do
 
     %{
       feed
-      | entries: Enum.reverse(entries),
+      | links: Enum.reverse(links),
+        entries: Enum.reverse(entries),
         categories: Enum.reverse(categories),
         authors: Enum.reverse(authors),
         contributors: Enum.reverse(contributors)
@@ -239,9 +241,11 @@ defmodule Fiet.Atom do
   end
 
   def handle_event(:end_element, {"link", _, _} = element, [{"feed", _, _} | _], feed) do
+    %{links: links} = feed
+
     link = Atom.Link.from_element(element)
 
-    %{feed | link: link}
+    %{feed | links: [link | links]}
   end
 
   def handle_event(:end_element, {"generator", _, _} = element, [{"feed", _, _} | _], feed) do

@@ -10,7 +10,7 @@ defmodule Fiet.AtomTest do
 
     assert %Atom.Feed{
              title: {:text, title},
-             link: link,
+             links: [alternate_link, self_link],
              categories: [space_category, science_category],
              updated: updated,
              generator: generator,
@@ -24,13 +24,22 @@ defmodule Fiet.AtomTest do
     assert subtitle ==
              "\n       A <em>lot</em> of effort\n       went into making this effortless\n     "
 
-    assert link == %Fiet.Atom.Link{
+    assert self_link == %Fiet.Atom.Link{
              href: "http://example.org/feed.atom",
              href_lang: nil,
              length: nil,
              rel: "self",
              title: nil,
              type: "application/atom+xml"
+           }
+
+    assert alternate_link == %Fiet.Atom.Link{
+             href: "http://example.org/",
+             href_lang: "en",
+             length: nil,
+             rel: "alternate",
+             title: nil,
+             type: "text/html"
            }
 
     assert space_category == %Fiet.Atom.Category{
