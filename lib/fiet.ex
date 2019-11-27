@@ -104,6 +104,7 @@ defmodule Fiet do
     |> case do
       {:ok, false} -> :error
       {:ok, type} -> type
+      {:error, _reason} -> :error
     end
   end
 end
