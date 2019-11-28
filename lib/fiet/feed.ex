@@ -9,7 +9,7 @@ defmodule Fiet.Feed do
           description: binary | nil,
           updated_at: binary | nil,
           categories: list(binary),
-          items: list(Fiet.Item.t()),
+          items: list(Fiet.Item.t())
         }
 
   defstruct [

@@ -19,7 +19,7 @@ defmodule Fiet.RSS2.Channel do
   `Fiet.RSS2.Channel` contains an `extras` attribute which can be used to store
   extra data provided by the feeds (which don't strictly follow RSS 2.0 specs).
   See `Fiet.RSS2.Engine` for more information.
-  
+
   """
 
   @type t :: %__MODULE__{
