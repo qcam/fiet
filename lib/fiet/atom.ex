@@ -252,6 +252,7 @@ defmodule Fiet.Atom do
 
   @entry_simple_tags [
     {"id", :id},
+    {"published", :published},
     {"updated", :updated}
   ]
 

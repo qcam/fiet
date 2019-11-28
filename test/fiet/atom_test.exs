@@ -60,7 +60,7 @@ defmodule Fiet.AtomTest do
              title: {:text, "Atom draft-07 snapshot"},
              updated: "2005-07-31T12:29:29Z",
              link: link,
-             published: nil,
+             published: "2003-12-13T08:29:29-04:00",
              summary: nil,
              content: {:text, "Test Content"},
              rights: {:xhtml, :skipped},
