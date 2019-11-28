@@ -18,7 +18,7 @@ defmodule FietTest do
     assert {:error, reason} = Fiet.parse(invalid_feed)
     assert reason == "input data format is not supported"
 
-    invalid_xml = "{}"
+    invalid_xml = File.read!("./test/support/fixture/jsonfeed.json")
     assert {:error, reason} = Fiet.parse(invalid_xml)
     assert reason == "input data format is not supported"
   end
