@@ -1,6 +1,6 @@
 # Fiết
 
-[![Actions Status](https://github.com/qcam/fiet/workflows/elixir/badge.svg)](https://github.com/qcam/fiet/actions)
+[![Actions Status](https://github.com/qcam/fiet/workflows/CI/badge.svg)](https://github.com/qcam/fiet/actions)
 
 An extendable feed parser in Elixir.
 
