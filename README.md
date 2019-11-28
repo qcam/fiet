@@ -1,6 +1,8 @@
 # Fiết
 
-An extendable feeds parser in Elixir.
+[![Actions Status](https://github.com/qcam/fiet/workflows/elixir/badge.svg)](https://github.com/qcam/fiet/actions)
+
+An extendable feed parser in Elixir.
 
 ## Installation
 
