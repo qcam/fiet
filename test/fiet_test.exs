@@ -10,12 +10,16 @@ defmodule FietTest do
 
     assert {:ok, %Fiet.Feed{}} = Fiet.parse(rss)
 
-    non_feed = """
+    invalid_feed = """
     <?xml version="1.0" ?>
     <foo/>
     """
 
-    assert {:error, reason} = Fiet.parse(non_feed)
+    assert {:error, reason} = Fiet.parse(invalid_feed)
+    assert reason == "input data format is not supported"
+
+    invalid_xml = "{}"
+    assert {:error, reason} = Fiet.parse(invalid_xml)
     assert reason == "input data format is not supported"
   end
 
