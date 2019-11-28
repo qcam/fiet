@@ -23,18 +23,22 @@ defmodule Fiet.FeedTest do
           id: "1",
           title: {:text, "item 1"},
           summary: {:text, "item 1 summary"},
-          link: %Atom.Link{
-            href: "https://example.com/item/1"
-          },
+          links: [
+            %Atom.Link{
+              href: "https://example.com/item/1"
+            }
+          ],
           published: "2018-01-0111:40:41+00:00"
         },
         %Atom.Entry{
           id: "2",
           title: {:text, "item 2"},
           summary: {:text, "item 2 summary"},
-          link: %Atom.Link{
-            href: "https://example.com/item/2"
-          },
+          links: [
+            %Atom.Link{
+              href: "https://example.com/item/2"
+            }
+          ],
           updated: "2018-01-0111:40:41+00:00"
         }
       ]

@@ -5,7 +5,7 @@ defmodule Fiet.Atom.Entry do
           summary: {:text | :html, title :: binary} | nil,
           content: {:text | :html, title :: binary} | nil,
           published: binary | nil,
-          link: Fiet.Atom.Link.t() | nil,
+          links: list(Fiet.Atom.Link.t()),
           rights: {:text | :html, title :: binary} | nil,
           authors: list(Fiet.Atom.Person.t()),
           contributors: list(Fiet.Atom.Person.t()),
@@ -19,8 +19,8 @@ defmodule Fiet.Atom.Entry do
     :summary,
     :content,
     :published,
-    :link,
     :rights,
+    links: [],
     authors: [],
     categories: [],
     contributors: []

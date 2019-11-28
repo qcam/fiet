@@ -87,7 +87,7 @@ defmodule Fiet.Feed do
     %{
       id: id,
       title: title,
-      link: link,
+      links: links,
       summary: summary,
       published: published,
       updated: updated
@@ -97,7 +97,7 @@ defmodule Fiet.Feed do
       id: id,
       title: text_construct(title),
       description: text_construct(summary),
-      link: extract_atom_link(link),
+      link: extract_atom_link(links),
       published_at: published || updated
     }
 
