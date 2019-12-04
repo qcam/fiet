@@ -127,7 +127,13 @@ defmodule Fiet.Feed do
   defp text_construct({_type, content}), do: content
   defp text_construct(nil), do: nil
 
-  defp extract_atom_link(links) when is_list(links), do: extract_atom_link(List.last(links))
-  defp extract_atom_link(%Atom.Link{href: href}), do: href
-  defp extract_atom_link(nil), do: nil
+  defp extract_atom_link(links = [link | _links]) when is_list(links) do
+    cond do
+      href = Enum.find_value(links, &extract_atom_link/1) -> href
+      true -> link.href
+    end
+  end
+
+  defp extract_atom_link(%Atom.Link{href: href, rel: "self"}), do: href
+  defp extract_atom_link(_link), do: nil
 end
