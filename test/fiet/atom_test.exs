@@ -10,7 +10,7 @@ defmodule Fiet.AtomTest do
 
     assert %Atom.Feed{
              title: {:text, title},
-             link: link,
+             links: [alternate_link, self_link],
              categories: [space_category, science_category],
              updated: updated,
              generator: generator,
@@ -24,13 +24,22 @@ defmodule Fiet.AtomTest do
     assert subtitle ==
              "\n       A <em>lot</em> of effort\n       went into making this effortless\n     "
 
-    assert link == %Fiet.Atom.Link{
+    assert self_link == %Fiet.Atom.Link{
              href: "http://example.org/feed.atom",
              href_lang: nil,
              length: nil,
              rel: "self",
              title: nil,
              type: "application/atom+xml"
+           }
+
+    assert alternate_link == %Fiet.Atom.Link{
+             href: "http://example.org/",
+             href_lang: "en",
+             length: nil,
+             rel: "alternate",
+             title: nil,
+             type: "text/html"
            }
 
     assert space_category == %Fiet.Atom.Category{
@@ -59,7 +68,7 @@ defmodule Fiet.AtomTest do
              id: "tag:example.org,2003:3.2397",
              title: {:text, "Atom draft-07 snapshot"},
              updated: "2005-07-31T12:29:29Z",
-             link: link,
+             links: [enclosure_link, alternate_link],
              published: "2003-12-13T08:29:29-04:00",
              summary: nil,
              content: {:text, "Test Content"},
@@ -69,7 +78,7 @@ defmodule Fiet.AtomTest do
              contributors: [joe, sam]
            } = entry
 
-    assert link ==
+    assert enclosure_link ==
              %Fiet.Atom.Link{
                href: "http://example.org/audio/ph34r_my_podcast.mp3",
                href_lang: nil,
@@ -77,6 +86,16 @@ defmodule Fiet.AtomTest do
                rel: "enclosure",
                title: nil,
                type: "audio/mpeg"
+             }
+
+    assert alternate_link ==
+             %Fiet.Atom.Link{
+               href: "http://example.org/2005/04/02/atom",
+               href_lang: nil,
+               length: nil,
+               rel: "alternate",
+               title: nil,
+               type: "text/html"
              }
 
     assert author ==
@@ -112,7 +131,7 @@ defmodule Fiet.AtomTest do
 
     assert %Atom.Entry{
              title: title,
-             link: link,
+             links: [link],
              updated: updated
            } = entry
 
