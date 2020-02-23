@@ -32,12 +32,12 @@ defmodule Fiet.RSS2.Item do
     :link,
     :description,
     :author,
-    :categories,
     :comments,
     :enclosure,
     :guid,
     :pub_date,
     :source,
+    categories: [],
     extras: %{}
   ]
 end
