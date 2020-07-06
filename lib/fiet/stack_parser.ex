@@ -44,7 +44,6 @@ defmodule Fiet.StackParser do
     [{^tag_name, attributes, content} | stack] = stack
 
     content = content |> Enum.reverse() |> Enum.join("")
-    attributes = Enum.reverse(attributes)
     element = {tag_name, attributes, content}
     new_state = emit_event(:end_element, element, stack, state, handler)
 
