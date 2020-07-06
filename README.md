@@ -8,7 +8,7 @@ An extendable feed parser in Elixir.
 
 ```elixir
 def deps do
-  [{:fiet, "~> 0.2.1"}]
+  [{:fiet, "~> 0.3"}]
 end
 ```
 
