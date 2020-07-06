@@ -38,7 +38,7 @@ defmodule Fiet.Mixfile do
   defp deps() do
     [
       {:saxy, "~> 1.2"},
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.22", only: :dev, runtime: false}
     ]
   end
 end
