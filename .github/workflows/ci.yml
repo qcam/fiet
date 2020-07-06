@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        elixir_version: [1.5, 1.6, 1.7, 1.8, 1.9]
+        elixir_version: ['1.6', '1.7', '1.8', '1.9', '1.10']
 
     runs-on: ubuntu-latest
 
@@ -29,5 +29,5 @@ jobs:
     - name: Check format
       if: matrix.elixir_version == '1.9'
       run: mix format --check-formatted
-    - name: Run Tests
+    - name: Run tests
       run: mix test
